@@ -1,0 +1,66 @@
+package Pack2;
+
+import java.util.concurrent.Semaphore;
+public class Th2a extends Thread{
+	private Semaphore sem;
+	int id = 0;
+	public Th2a(Semaphore sem,int id) {
+		this.sem = sem;
+		this.id=id;
+	}
+
+	public void run() {
+		int v = (int) id/3;
+		//(double quant,double q1,double q2,int np)
+		switch(v){
+		case 1:
+			unif(1,0.2,1.0,2);
+			break;
+		case 2:
+			unif(1.5,0.5,1.5,3);
+			break;
+		case 0:
+			unif(1.5,1.0,2.0,3);
+			break;
+}
+		super.run();
+	}
+	public void opdt(double quant,int p) {
+		int vals =(int) (quant*1000);
+		try{
+			System.out.println("Iniciando "+p+"º"+" Transação BD <-> "+"#"+id+"º"+" total:"+vals);
+			sleep(vals);
+		}catch(Exception e){
+			
+		}finally{
+			System.out.println(p+"º" + " Transação BD <-> "+"#"+id+"º Finalizada");
+		}
+	}
+	
+	public void op(double q1,double q2,int p) {
+		int v1= (int) q1*1000;
+		int v2= (int) q2*1000;
+		int tv2 = v2-v1;
+		int v = (int) ((Math.random()*(v1+1))+tv2);
+		try{
+			System.out.println("#"+id+"º"+" Iniciando "+p+"º"+" Cálculos de "+q1+" a "+q2+" segundos "+v);
+			sleep(v);
+		}catch(Exception e){
+			
+		}finally{
+			System.out.println("#"+id+"º"+" Finalizado "+p+"º"+" Cálculos de "+q1+" a "+q2+" segundos");
+		}
+	}
+	public void unif(double quant,double q1,double q2,int np) {
+		for(int c=0;c<np;c++) {
+			op(q1,q2,c+1);
+			try {
+			sem.acquire();
+			opdt(quant,c+1);
+			}catch(Exception e){
+			}finally {
+			sem.release();
+			}
+		}
+	}
+}

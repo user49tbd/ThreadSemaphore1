@@ -1,0 +1,15 @@
+package Pack1;
+import java.util.concurrent.Semaphore;
+import Pack2.Th2a;
+public class Th1a {
+	public static void main(String []args) {
+		int per =1;
+		Semaphore sem = new Semaphore(per);
+		for(int c=0;c<21;c++) {
+			Thread a = new Th2a(sem,c+1);
+			a.start();
+	}
+
+
+}
+}
